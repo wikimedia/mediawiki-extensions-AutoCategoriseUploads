@@ -1,0 +1,24 @@
+{
+	"name": "AutoCategoriseUploads",
+	"version": "1.0.0",
+	"author": [
+		"Ryan Schmidt"
+	],
+	"url": "https://www.mediawiki.org/wiki/Extension:AutoCategoriseUploads",
+	"namemsg": "autocatuploads",
+	"descriptionmsg": "autocatuploads-desc",
+	"license-name": "GPL-3.0-or-later",
+	"type": "other",
+	"MessagesDirs": {
+		"AutoCategoriseUploads": [
+			"i18n"
+		]
+	},
+	"AutoloadClasses": {
+		"AutoCatUploads\\Hooks": "Hooks.php"
+	},
+	"Hooks": {
+		"PageContentSave": "AutoCatUploads\\Hooks::onPageContentSave"
+	},
+	"manifest_version": 1
+}

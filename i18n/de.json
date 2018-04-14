@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Max Gerlach"
+		]
+	},
+	"autocatuploads-desc": "Füge die Datei basierend auf ihren Metadaten automatisch Kategorien hinzu.",
+	"autocatuploads-comment": "<!-- Die Datei wurde automatisch aufgrund ihrer Metadaten folgenden Kategorien zugeordnet -->"
+}

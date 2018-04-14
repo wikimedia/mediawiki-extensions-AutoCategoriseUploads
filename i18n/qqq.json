@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ryan Schmidt"
+		]
+	},
+	"autocatuploads": "{{name}}",
+	"autocatuploads-desc": "{{desc|name=AutoCategoriseUploads|url=https://www.mediawiki.org/wiki/Extension:AutoCategoriseUploads}}",
+	"autocatuploads-comment": "When the user uploads a file, keywords are taken from file metadata and are automatically added as <nowiki>[[Category:]]</nowiki> tags on the page. This message appears above those automatically-added categories to let the user know why these category tags suddenly appeared in the page content."
+}
