@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Gomoko"
+		]
+	},
+	"autocatuploads": "AutoCategoriseUploads",
+	"autocatuploads-desc": "Ajouter automatiquement les nouveaux téléchargements aux catégories d’après les métadonnées des fichiers.",
+	"autocatuploads-comment": "<!-- Les catégories suivantes ont été ajoutées automatiquement d&après les métadonnées du fichier -->"
+}

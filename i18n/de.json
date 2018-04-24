@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Max Gerlach"
+			"Max Gerlach",
+			"Metalhead64"
 		]
 	},
-	"autocatuploads-desc": "Füge die Datei basierend auf ihren Metadaten automatisch Kategorien hinzu.",
-	"autocatuploads-comment": "<!-- Die Datei wurde automatisch aufgrund ihrer Metadaten folgenden Kategorien zugeordnet -->"
+	"autocatuploads": "AutoCategoriseUploads",
+	"autocatuploads-desc": "Ermöglicht das automatische Hinzufügen neu hochgeladener Dateien in Kategorien basierend auf den Metadaten der Dateien.",
+	"autocatuploads-comment": "<!-- Die folgenden Kategorien wurden basierend auf den Metadaten der Datei automatisch hinzugefügt -->"
 }

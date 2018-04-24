@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Kly"
+		]
+	},
+	"autocatuploads": "AutoCategoriseUploads",
+	"autocatuploads-desc": "自動基於檔案的詮釋資料來添加分類更新",
+	"autocatuploads-comment": "<!-- 以下分類基於檔案的詮釋資料來被自動添加 -->"
+}
