@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Mainframe98"
+		]
+	},
+	"autocatuploads-desc": "Voegt nieuwe uploads auotmatisch toe aan categorieën op basis van bestandsmetadata.",
+	"autocatuploads-comment": "<!-- De categorieën hier beneden zijn automatisch toegevoegd op basis van de bestandsmetadata -->"
+}

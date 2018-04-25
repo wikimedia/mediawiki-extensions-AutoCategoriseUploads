@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Liuxinyu970226"
+		]
+	},
+	"autocatuploads": "自动分类上传",
+	"autocatuploads-desc": "自动添加新上传至基于文件元数据的分类。",
+	"autocatuploads-comment": "<!-- 以下分类已基于文件元数据自动添加 -->"
+}

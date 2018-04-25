@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Ooswesthoesbes"
+		]
+	},
+	"autocatuploads": "AutoCategoriseUploads",
+	"autocatuploads-desc": "Veug autematis nuuj uploads toe aan categorieje op gróndj van bestandjsmetagegaeves.",
+	"autocatuploads-comment": "<!-- De categorieje hie-ónger zint autematis toegeveug wore op gróndj van de bestandjsmetagegaeves -->"
+}
