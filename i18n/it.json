@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Sarah Bernabei"
+		]
+	},
+	"autocatuploads": "Aggiornamento automatico delle classificazioni",
+	"autocatuploads-desc": "Aggiungere automaticamente i nuovi aggiornamenti in base al file metadata.",
+	"autocatuploads-comment": "<!-- La seguente categoria è stata automaticamente aggiunta in base al file metadata -->"
+}
