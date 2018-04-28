@@ -1,8 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Athena in Wonderland"
+			"Athena in Wonderland",
+			"Hamilton Abreu"
 		]
 	},
-	"autocatuploads": "AutoCategoriseUploads"
+	"autocatuploads": "AutoCategoriseUploads",
+	"autocatuploads-desc": "Colocar os novos carregamentos em categorias automaticamente, com base nos metadados do ficheiro.",
+	"autocatuploads-comment": "<!-- As seguintes categorias foram acrescentadas automaticamente com base nos metadados do ficheiro -->"
 }
