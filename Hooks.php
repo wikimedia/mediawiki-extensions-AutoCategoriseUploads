@@ -6,17 +6,17 @@ class Hooks {
 	/**
 	 * Automatically inject Category wikimarkup onto description pages
 	 * of new uploads based on file metadata.
-	 * 
-	 * @param \WikiPage $wikiPage The page being edited
-	 * @param \User $user The user editing the page
-	 * @param \Content $content Page content
-	 * @param string $summary Edit summary
-	 * @param boolean $isMinor Whether or not this is a minor edit
+	 *
+	 * @param \WikiPage &$wikiPage The page being edited
+	 * @param \User &$user The user editing the page
+	 * @param \Content &$content Page content
+	 * @param string &$summary Edit summary
+	 * @param bool $isMinor Whether or not this is a minor edit
 	 * @param null $isWatch Unused, always null
 	 * @param null $section Unused, always null
-	 * @param int $flags Bitfield of EDIT_* constants
-	 * @param \Status $status Status of page save
-	 * @return boolean Returns true to continue hook processing
+	 * @param int &$flags Bitfield of EDIT_* constants
+	 * @param \Status &$status Status of page save
+	 * @return bool Returns true to continue hook processing
 	 */
 	public static function onPageContentSave(
 		\WikiPage &$wikiPage, \User &$user, \Content &$content, &$summary,
@@ -80,7 +80,7 @@ class Hooks {
 	/**
 	 * Get the keywords from file metadata. We parse XMP, ITCP (for JPG),
 	 * and ID3 (for MP3).
-	 * 
+	 *
 	 * @param \File $file The file to get keywords for
 	 * @return array Array of keywords
 	 */
@@ -106,7 +106,7 @@ class Hooks {
 
 	/**
 	 * Parse XMP metadata from a file
-	 * 
+	 *
 	 * @param string $fname The file to process
 	 * @return array Array of keywords
 	 */
@@ -116,7 +116,7 @@ class Hooks {
 		$tail = '';
 		$xmp = '';
 		$xmpState = 0;
-	
+
 		/* XMP States
 		 * 0 = look for beginning tag
 		 * 1 = beginning tag found in this chunk (don't strip $tail)
@@ -126,7 +126,7 @@ class Hooks {
 		 */
 		while ( !feof( $f ) ) {
 			$data = $tail . fread( $f, 4096 );
-	
+
 			if ( $xmpState === 0 ) {
 				// looking for beginning tag
 				$spos = strpos( $data, '<x:xmpmeta' );
@@ -135,14 +135,14 @@ class Hooks {
 					$data = substr( $data, $spos );
 				}
 			}
-			
+
 			if ( $xmpState === 1 || $xmpState === 2 ) {
 				$epos = strpos( $data, '</x:xmpmeta>' );
 				if ( $epos !== false ) {
 					$xmpState += 2;
 					$data = substr( $data, 0, $epos + 12 );
 				}
-	
+
 				if ( $xmpState === 1 || $xmpState === 3 ) {
 					$xmp .= $data;
 				} else {
@@ -150,19 +150,19 @@ class Hooks {
 					$xmp .= substr( $data, strlen( $tail ) );
 				}
 			}
-	
+
 			if ( $xmpState === 1 ) {
 				$xmpState = 2;
 			} elseif ( $xmpState === 3 || $xmpState === 4 ) {
 				break;
 			}
-	
+
 			// catch tags split across chunk boundaries by overlapping buffer
 			$tail = substr( $data, -16 );
 		}
-	
+
 		fclose( $f );
-	
+
 		if ( $xmp === '' ) {
 			// no XMP data found
 			return [];
@@ -172,7 +172,7 @@ class Hooks {
 		$parsed->registerXPathNamespace(
 			'dc',
 			'http://purl.org/dc/elements/1.1/' );
-		$subject = $parsed->xpath('//dc:subject');
+		$subject = $parsed->xpath( '//dc:subject' );
 		$keywords = [];
 
 		if ( $subject !== false && $subject !== [] ) {
@@ -181,7 +181,7 @@ class Hooks {
 			$subject->registerXPathNamespace(
 				'rdf',
 				'http://www.w3.org/1999/02/22-rdf-syntax-ns#' );
-			$lis = $subject->xpath('.//rdf:li');
+			$lis = $subject->xpath( './/rdf:li' );
 
 			if ( $lis !== false ) {
 				foreach ( $lis as $li ) {
@@ -198,7 +198,7 @@ class Hooks {
 
 	/**
 	 * Parse ITCP metdata for a JPG image.
-	 * 
+	 *
 	 * @param string $fname File path
 	 * @return array Array of keywords
 	 */
@@ -217,7 +217,7 @@ class Hooks {
 
 	/**
 	 * Parse ID3 metadata for an MP3 file.
-	 * 
+	 *
 	 * @param string $fname File path
 	 * @return array Array of keywords
 	 */
@@ -233,7 +233,7 @@ class Hooks {
 			fclose( $f );
 			return [];
 		}
-		
+
 		// Note: v2.4.0 also allows appended tags where the header doesn't
 		// appear at the beginning, or data is split between header and a
 		// tag later on (using a "footer" with 3DI identifier). We don't
@@ -391,7 +391,7 @@ class Hooks {
 
 	/**
 	 * Splits a comma or semicolon separated list of keywords into an array.
-	 * 
+	 *
 	 * @param string $strdata String to split
 	 * @return array Array of keywords
 	 */
@@ -416,22 +416,22 @@ class Hooks {
 	/**
 	 * Converts a 4-byte array where only the lower 7 bits of each byte are used
 	 * into a 28-byte integer. The ID3 encoding makes extensive use of these.
-	 * 
+	 *
 	 * @param int $i The 4-byte array
 	 * @return int The processed 28-bit int
 	 */
 	private static function processSyncsafeInt( $i ) {
 		$p1 = $i & 0x0000007f;
-		$p2 = ($i & 0x00007f00) >> 1;
-		$p3 = ($i & 0x007f0000) >> 2;
-		$p4 = ($i & 0x7f000000) >> 3;
+		$p2 = ( $i & 0x00007f00 ) >> 1;
+		$p3 = ( $i & 0x007f0000 ) >> 2;
+		$p4 = ( $i & 0x7f000000 ) >> 3;
 
 		return $p1 | $p2 | $p3 | $p4;
 	}
 
 	/**
 	 * Combines 3 bytes into a 4-byte int.
-	 * 
+	 *
 	 * @param int $b1 The first (most significant) byte.
 	 * @param int $b2 The second byte.
 	 * @param int $b3 The third (least significant) byte.
@@ -443,7 +443,7 @@ class Hooks {
 
 	/**
 	 * Reads a number of bytes from the buffer and advances the buffer.
-	 * 
+	 *
 	 * @param string $buf The buffer to read from
 	 * @param int $length The number of bytes to read
 	 * @return string Up to $length bytes read from the beginning of $buf.
@@ -451,7 +451,7 @@ class Hooks {
 	private static function bufread( &$buf, $length ) {
 		$str = substr( $buf, 0, $length );
 		$buf = substr( $buf, $length );
-	
+
 		return $str;
 	}
 }
