@@ -1,9 +1,11 @@
 {
 	"@metadata": {
 		"authors": [
-			"Vlad5250"
+			"Vlad5250",
+			"Movses"
 		]
 	},
+	"autocatuploads": "AutoCategoriseUploads",
 	"autocatuploads-desc": "Автоматически добавлять новые загрузки в категории на базе метаданных.",
 	"autocatuploads-comment": "<!-- Следующие категории были автоматически добавлены на базе метаданных файла -->"
 }
