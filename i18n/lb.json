@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Robby"
+		]
+	},
+	"autocatuploads": "AutoCategoriseUploads",
+	"autocatuploads-desc": "Automatesch nei eropgeluede Fichieren a Kategorie setzen op der Basis vun de Metadate vum Fichier.",
+	"autocatuploads-comment": "<!-- Dës Kategorie goufen automatesch op der Basis vun de Metadate vum Fichier derbäigesat -->"
+}
