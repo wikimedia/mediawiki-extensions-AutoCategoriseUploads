@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Jon Harald Søby"
+		]
+	},
+	"autocatuploads": "Autokategoriser opplastinger",
+	"autocatuploads-desc": "Legg automatisk til opplastinger i kategorier basert på filas metadata.",
+	"autocatuploads-comment": "<!-- Følgende kategorier ble lagt til automatisk basert på filas metadata -->"
+}
