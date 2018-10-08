@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Railfail536"
+		]
+	},
+	"autocatuploads": "Automatyczna kategoryzacja plików",
+	"autocatuploads-desc": "Automatycznie dodaje nowe pliki do kategorii opartych na ich metadanych",
+	"autocatuploads-comment": "<!-- Poniższe kategorie zostały dodane automatycznie na podstawie metadanych pliku -->"
+}
