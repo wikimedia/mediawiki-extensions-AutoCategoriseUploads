@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Joetaras"
+		]
+	},
+	"autocatuploads": "AutoCategoriseUploads",
+	"autocatuploads-desc": "Aggiunge automaticamende le carecaminde nuève a le categorije in base a le metadate d'u file.",
+	"autocatuploads-comment": "<!-- Le categorije ca avènene onne state automaticamende aggiunde in base a le metadate d'u file -->"
+}
