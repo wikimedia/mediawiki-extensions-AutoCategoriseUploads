@@ -1,9 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Fitoschido"
+			"Fitoschido",
+			"Tiberius1701"
 		]
 	},
-	"autocatuploads-desc": "Añadir automáticamente categorías a las cargas nuevas según los metadatos del archivo.",
+	"autocatuploads-desc": "Añadir automáticamente categorías a las subidas nuevas según los metadatos del archivo.",
 	"autocatuploads-comment": "<!-- Se añadieron automáticamente las categorías siguientes en función de los metadatos del archivo -->"
 }
