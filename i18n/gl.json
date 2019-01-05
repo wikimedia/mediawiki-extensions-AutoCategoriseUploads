@@ -1,0 +1,10 @@
+{
+	"@metadata": {
+		"authors": [
+			"Banjo"
+		]
+	},
+	"autocatuploads": "AutoCategoriseUploads",
+	"autocatuploads-desc": "Engadir categorías de forma automática ós novos ficheiros cargados baseándose nos metadatos de ficheiro.",
+	"autocatuploads-comment": "<!-- As seguintes categorías engadíronse de forma automática baseándose nos metadatos de ficheiro -->"
+}
