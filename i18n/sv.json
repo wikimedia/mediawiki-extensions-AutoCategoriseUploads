@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"WikiPhoenix"
+		]
+	},
+	"autocatuploads-desc": "Lägg automatiskt till nya uppladdningar i kategorier baserat på filens metadata",
+	"autocatuploads-comment": "<!-- Följande kategorier lades automatiskt till baserat på filens metadata -->"
+}
