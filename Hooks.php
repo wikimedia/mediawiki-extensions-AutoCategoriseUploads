@@ -2,106 +2,177 @@
 
 namespace AutoCatUploads;
 
+use File;
+use getID3;
+use getid3_exception;
+use MediaWiki\MediaWikiServices;
+use MWException;
+use Parser;
+use PPFrame;
+use SimpleXMLElement;
+use Title;
+use WikiFilePage;
+use WikiPage;
+
 class Hooks {
 	/**
-	 * Automatically inject Category wikimarkup onto description pages
-	 * of new uploads based on file metadata.
+	 * Register our {{FILECATEGORIES}} variable
 	 *
-	 * @param \WikiPage &$wikiPage The page being edited
-	 * @param \User &$user The user editing the page
-	 * @param \Content &$content Page content
-	 * @param string &$summary Edit summary
-	 * @param bool $isMinor Whether or not this is a minor edit
-	 * @param null $isWatch Unused, always null
-	 * @param null $section Unused, always null
-	 * @param int &$flags Bitfield of EDIT_* constants
-	 * @param \Status &$status Status of page save
-	 * @return bool Returns true to continue hook processing
+	 * @param string[] &$customVariables Array of custom variables that MediaWiki recognizes
 	 */
-	public static function onPageContentSave(
-		\WikiPage &$wikiPage, \User &$user, \Content &$content, &$summary,
-		$isMinor, $isWatch, $section, &$flags, \Status &$status
+	public static function onMagicWordwgVariableIDs( &$customVariables ) {
+		$customVariables[] = 'filecategories';
+	}
+
+	/**
+	 * Retrieve the value of our variable
+	 *
+	 * @param Parser $parser
+	 * @param array &$varCache Optional variable cache used to avoid processing multiple invocations
+	 * @param string $magicWordId Internal magic word id (as defined in MagicWordwgVariableIds)
+	 * @param string|null &$ret Value of the variable (in the page's content model, generally wikitext)
+	 * @param PPFrame|bool $frame Frame for the current parse
+	 * @throws MWException
+	 */
+	public static function onParserGetVariableValueSwitch(
+		Parser $parser,
+		&$varCache,
+		$magicWordId,
+		&$ret,
+		$frame
 	) {
-		// we only care about file upload description pages,
-		// which are always instances of WikiFilePage.
-		if ( !( $wikiPage instanceof \WikiFilePage ) ) {
-			return true;
+		if ( $magicWordId !== 'filecategories' ) {
+			// not us, don't care
+			return;
 		}
 
-		// if this is a re-upload, we don't want to mess with categorisation.
-		if ( !( $flags & \EDIT_NEW ) ) {
-			return true;
+		// from this point on we're checking filesystem, db, and possibly foreign resources
+		// as such, increment the expensive function count
+		$parser->incrementExpensiveFunctionCount();
+
+		// we never return output, we simply add categories directly via the parser
+		$ret = '';
+
+		$title = $frame instanceof PPFrame ? $frame->getTitle() : $parser->getTitle();
+		$page = WikiPage::factory( $title );
+		if ( !$page instanceof WikiFilePage ) {
+			// not a file page, bail out
+			return;
 		}
 
-		// if the page isn't wikitext, bail out
-		if ( $content->getModel() !== \CONTENT_MODEL_WIKITEXT ) {
-			return true;
-		}
-
-		$file = $wikiPage->getFile();
+		$file = $page->getFile();
 		if ( $file === false || !$file->exists() ) {
-			return true;
+			return;
+		}
+
+		// check our cache; we cache with a tuple of our magic word id (since it's a shared cache)
+		// as well as the hash for the associated file.
+		$cachekey = 'filecategories-' . $file->getSha1();
+		if ( isset( $varCache[$cachekey] ) ) {
+			foreach ( $varCache[$cachekey] as $category ) {
+				/** @var Title $category */
+				$parser->getOutput()->addCategory( $category->getDBkey(), $parser->getDefaultSort() );
+			}
+
+			return;
 		}
 
 		$keywords = self::getKeywords( $file );
-		if ( $keywords === [] ) {
-			return true;
-		}
-
-		$categoryText = '';
+		$categories = [];
 		foreach ( $keywords as $potentialCat ) {
-			$title = \Title::makeTitleSafe( \NS_CATEGORY, $potentialCat );
+			$category = Title::makeTitleSafe( NS_CATEGORY, $potentialCat );
 
 			// don't make cats for invalid titles or titles which happen
 			// to include namespace names or interwiki.
-			if (
-				$title === null
-				|| $title->getNamespace() !== \NS_CATEGORY
-				|| $title->isExternal()
+			if ( $category === null
+				|| $category->getNamespace() !== NS_CATEGORY
+				|| $category->isExternal()
 			) {
 				continue;
 			}
 
-			$categoryText .= "\n[[" . $title->getPrefixedText() . ']]';
+			$parser->getOutput()->addCategory( $category->getDBkey(), $parser->getDefaultSort() );
+			$categories[] = $category;
 		}
 
-		if ( $categoryText === '' ) {
-			return true;
-		}
+		// cache the result for future invocations on this same file
+		$varCache[$cachekey] = $categories;
+	}
 
-		$text = $content->getNativeData()
-			. "\n" . wfMessage( 'autocatuploads-comment' )->plain()
-			. $categoryText;
-		$content = new \WikitextContent( $text );
-
-		return true;
+	/**
+	 * Alter the initial page text of the Special:Upload form to include {{FILECATEGORIES}}.
+	 * This also impacts the importImages.php maintenance script.
+	 *
+	 * @param string &$pageText Full wikitext for the file description page
+	 * @param array $msg Array of localized headings
+	 * @param Config $config
+	 */
+	public static function onGetInitialPageText( &$pageText, array $msg, Config $config ) {
+		$magicWord = MediaWikiServices::getInstance()->getMagicWordFactory()->get( 'filecategories' );
+		$localized = $magicWord->getSynonym( 0 );
+		$pageText .= "\n{{{$localized}}}";
 	}
 
 	/**
 	 * Get the keywords from file metadata. We parse XMP, ITCP (for JPG),
 	 * and ID3 (for MP3).
 	 *
-	 * @param \File $file The file to get keywords for
+	 * @param File $file The file to get keywords for
 	 * @return array Array of keywords
 	 */
 	private static function getKeywords( $file ) {
 		$fsfile = $file->getRepo()->getLocalReference( $file->getPath() );
-		$ext = $file->getExtension();
 		$path = $fsfile->getPath();
 
-		$xmp = self::parseXMP( $path );
-		$itcp = [];
-		$id3 = [];
-
-		if ( $ext === 'jpg' ) {
-			$itcp = self::parseITCP( $path );
+		$keywords = self::parseXMP( $path );
+		$metadata = [];
+		try {
+			$getId3 = new getID3();
+			$metadata = $getId3->analyze( $path );
+		} catch ( getid3_exception $e ) {
+			// no-op
 		}
 
-		if ( $ext === 'mp3' ) {
-			$id3 = self::parseID3( $path );
+		// IPTC metadata (jpg)
+		self::merge( $keywords, $metadata, 'iptc.comments.IPTCApplication.Keywords' );
+
+		// ID3 metadata (mp3, etc.)
+		self::merge( $keywords, $metadata, 'id3v2.comments.comment', true );
+
+		return array_unique( $keywords );
+	}
+
+	/**
+	 * Merge the values given in the metadata path into the keywords
+	 *
+	 * @param array &$keywords Keywords array, will be merged with found values from metadata
+	 * @param array $metadata Metadata array to obtain values from
+	 * @param string $path Dot-separated path of array keys in metadata. If any given point of the path
+	 * 		does not exist, this function no-ops (it does not throw any errors or exceptions).
+	 * @param bool $split If true, each member in the result is further split on commas/semicolons.
+	 */
+	private static function merge( array &$keywords, array $metadata, $path, $split = false ) {
+		$parts = explode( '.', $path );
+		$current = $metadata;
+		foreach ( $parts as $p ) {
+			if ( !array_key_exists( $p, $current ) ) {
+				return;
+			}
+
+			$current = $current[$p];
 		}
 
-		return array_unique( array_merge( $xmp, $itcp, $id3 ) );
+		if ( !is_array( $current ) ) {
+			$current = [ $current ];
+		}
+
+		if ( $split ) {
+			foreach ( $current as $combinedString ) {
+				$keywords = array_merge( $keywords, self::splitKeywordString( $combinedString ) );
+			}
+		} else {
+			$keywords = array_merge( $keywords, $current );
+		}
 	}
 
 	/**
@@ -168,7 +239,7 @@ class Hooks {
 			return [];
 		}
 
-		$parsed = new \SimpleXMLElement( $xmp );
+		$parsed = new SimpleXMLElement( $xmp );
 		$parsed->registerXPathNamespace(
 			'dc',
 			'http://purl.org/dc/elements/1.1/' );
@@ -197,199 +268,6 @@ class Hooks {
 	}
 
 	/**
-	 * Parse ITCP metdata for a JPG image.
-	 *
-	 * @param string $fname File path
-	 * @return array Array of keywords
-	 */
-	private static function parseITCP( $fname ) {
-		getimagesize( $fname, $info );
-		// APP13 is ITPC, and inside of that the key 2#025 is Keywords
-		if ( array_key_exists( 'APP13', $info ) ) {
-			$metadata = iptcparse( $info['APP13'] );
-			if ( array_key_exists( '2#025', $metadata ) ) {
-				return $metadata['2#025'];
-			}
-		}
-
-		return [];
-	}
-
-	/**
-	 * Parse ID3 metadata for an MP3 file.
-	 *
-	 * @param string $fname File path
-	 * @return array Array of keywords
-	 */
-	private static function parseID3( $fname ) {
-		$f = fopen( $fname, 'rb' );
-		$hdr = fread( $f, 10 );
-
-		// read id string, major version, minor version, flags, and size
-		$hdr = unpack( 'a3id/Cmaj/Cmin/Cflags/Nsz', $hdr );
-
-		// only support versions 2.2.X-2.4.X
-		if ( $hdr['id'] !== 'ID3' || $hdr['maj'] < 2 || $hdr['maj'] > 4 ) {
-			fclose( $f );
-			return [];
-		}
-
-		// Note: v2.4.0 also allows appended tags where the header doesn't
-		// appear at the beginning, or data is split between header and a
-		// tag later on (using a "footer" with 3DI identifier). We don't
-		// support that as it doesn't see much real-world use right now.
-		$hdr['sz'] = self::processSyncsafeInt( $hdr['sz'] );
-		$needUnsync = ( $hdr['flags'] & 0x80 ) === 0x80;
-		$buf = fread( $f, $hdr['sz'] );
-
-		// check for footer (unused for now)
-		$foot = '';
-		if ( $hdr['flags'] & 0x10 ) {
-			$foot = fread( $f, 10 );
-		}
-
-		fclose( $f );
-
-		// run unsyc algorithm if needed
-		if ( $needUnsync ) {
-			$buf = str_replace( "\xff\x00", "\xff", $buf );
-		}
-
-		// skip over an extended header (versions 3 and 4 only)
-		if ( $hdr['flags'] & 0x40 ) {
-			$ehsize = unpack( 'Nsz', self::bufread( $buf, 4 ) );
-			$ehsize = self::processSyncsafeInt( $ehsize['sz'] );
-			if ( $hdr['maj'] === 3 ) {
-				// $ehsize does not include the 4 bytes we just read
-				self::bufread( $buf, $ehsize );
-			} elseif ( $hdr['maj'] === 4 ) {
-				// $ehsize includes the 4 bytes we just read
-				self::bufread( $buf, $ehsize - 4 );
-			}
-		}
-
-		// start processing frames looking for COMM (or COM in v2)
-		// if it isn't COMM, just skip over it; we don't care about it
-		while ( $buf !== '' ) {
-			$compressed = false;
-
-			if ( $hdr['maj'] === 2 ) {
-				// 3 byte tag name and 3 byte size
-				$th = unpack( 'a3id/Cb1/Cb2/Cb3', self::bufread( $buf, 6 ) );
-				$tsize = self::combine( $th['b1'], $th['b2'], $th['b3'] );
-			} elseif ( $hdr['maj'] === 3 ) {
-				// 4 byte tag name, 4 byte size, and 2 byte flags
-				$th = unpack( 'a4id/Nsz/nflags', self::bufread( $buf, 10 ) );
-				$tsize = self::processSyncsafeInt( $th['sz'] );
-				if ( $th['flags'] & 0x0080 ) {
-					$compressed = true;
-					// next 4 bytes are the decompressed size; skip them
-					self::bufread( $buf, 4 );
-				}
-
-				if ( $th['flags'] & 0x0020 ) {
-					// tag is grouped
-					// not supported here but it adds an extra byte to discard
-					self::bufread( $buf, 1 );
-				}
-
-				if ( $th['flags'] & 0x0040 ) {
-					// tag is encrypted, and we don't support that
-					self::bufread( $buf, $tsize + 1 );
-					continue;
-				}
-			} else {
-				// 4 byte tag name, 4 byte size, and 2 byte flags
-				$th = unpack( 'a4id/Nsz/nflags', self::bufread( $buf, 10 ) );
-				$tsize = self::processSyncsafeInt( $th['sz'] );
-
-				if ( $th['flags'] & 0x0040 ) {
-					// grouped
-					self::bufread( $buf, 1 );
-				}
-
-				if ( $th['flags'] & 0x0008 ) {
-					// compressed
-					$compressed = true;
-				}
-
-				if ( $th['flags'] & 0x0001 ) {
-					// data length was added (4 bytes we don't care about)
-					self::bufread( $buf, 4 );
-				}
-
-				if ( $th['flags'] & 0x0004 ) {
-					// encrypted -- not supported but adds an extra byte
-					self::bufread( $buf, $tsize + 1 );
-					continue;
-				}
-			}
-
-			if ( $compressed ) {
-				$idata = gzinflate( self::bufread( $buf, $tsize ) );
-			} else {
-				$idata = &$buf;
-			}
-
-			if ( $th['id'] !== 'COM' && $th['id'] !== 'COMM' ) {
-				self::bufread( $buf, $tsize );
-				continue;
-			}
-
-			$enc = self::bufread( $idata, 1 );
-			// 3 byte language code; we don't process this
-			self::bufread( $idata, 3 );
-
-			if ( $compressed ) {
-				$strings = $idata;
-			} else {
-				$strings = self::bufread( $idata, $tsize - 4 );
-			}
-
-			switch ( $enc ) {
-				case 0:
-					$tenc = 'ISO-8859-1';
-					$split = "\x00";
-					break;
-				case 1:
-					if ( $hdr['maj'] === 4 ) {
-						$tenc = 'UTF-16';
-					} else {
-						$tenc = 'UCS-2';
-					}
-
-					$split = "\x00\x00";
-					break;
-				case 2:
-					$tenc = 'UTF-16BE';
-					$split = "\x00\x00";
-					break;
-				case 3:
-					$tenc = 'UTF-8';
-					$split = "\x00";
-					break;
-				default:
-					// invalid encoding
-					return [];
-			}
-
-			list( $desc, $comm ) = explode( $split, $strings, 2 );
-			$desc = trim( mb_convert_encoding( $desc, 'UTF-8', $tenc ) );
-
-			// We might have multiple comment tags, each with a distinct $desc
-			// The one with the empty desc is the keywords, all others
-			// typically contain app-specific metadata.
-			if ( $desc === '' ) {
-				$comm = trim( mb_convert_encoding( $comm, 'UTF-8', $tenc ) );
-				return self::splitKeywordString( $comm );
-			}
-		}
-
-		// got to end of tags without finding a comment with blank description
-		return [];
-	}
-
-	/**
 	 * Splits a comma or semicolon separated list of keywords into an array.
 	 *
 	 * @param string $strdata String to split
@@ -411,47 +289,5 @@ class Hooks {
 		}
 
 		return $keywords;
-	}
-
-	/**
-	 * Converts a 4-byte array where only the lower 7 bits of each byte are used
-	 * into a 28-byte integer. The ID3 encoding makes extensive use of these.
-	 *
-	 * @param int $i The 4-byte array
-	 * @return int The processed 28-bit int
-	 */
-	private static function processSyncsafeInt( $i ) {
-		$p1 = $i & 0x0000007f;
-		$p2 = ( $i & 0x00007f00 ) >> 1;
-		$p3 = ( $i & 0x007f0000 ) >> 2;
-		$p4 = ( $i & 0x7f000000 ) >> 3;
-
-		return $p1 | $p2 | $p3 | $p4;
-	}
-
-	/**
-	 * Combines 3 bytes into a 4-byte int.
-	 *
-	 * @param int $b1 The first (most significant) byte.
-	 * @param int $b2 The second byte.
-	 * @param int $b3 The third (least significant) byte.
-	 * @return int
-	 */
-	private static function combine( $b1, $b2, $b3 ) {
-		return ( $b1 << 16 ) | ( $b2 << 8 ) | $b3;
-	}
-
-	/**
-	 * Reads a number of bytes from the buffer and advances the buffer.
-	 *
-	 * @param string $buf The buffer to read from
-	 * @param int $length The number of bytes to read
-	 * @return string Up to $length bytes read from the beginning of $buf.
-	 */
-	private static function bufread( &$buf, $length ) {
-		$str = substr( $buf, 0, $length );
-		$buf = substr( $buf, $length );
-
-		return $str;
 	}
 }

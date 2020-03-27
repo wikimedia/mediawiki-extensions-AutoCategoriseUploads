@@ -1,6 +1,6 @@
 {
 	"name": "AutoCategoriseUploads",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"author": [
 		"Ryan Schmidt"
 	],
@@ -8,17 +8,30 @@
 	"namemsg": "autocatuploads",
 	"descriptionmsg": "autocatuploads-desc",
 	"license-name": "GPL-3.0-or-later",
-	"type": "other",
+	"type": "variable",
 	"MessagesDirs": {
 		"AutoCategoriseUploads": [
 			"i18n"
 		]
 	},
+	"ExtensionMessagesFiles": {
+		"ACUMagic": "AutoCategoriseUploads.i18n.php"
+	},
 	"AutoloadClasses": {
 		"AutoCatUploads\\Hooks": "Hooks.php"
 	},
 	"Hooks": {
-		"PageContentSave": "AutoCatUploads\\Hooks::onPageContentSave"
+		"MagicWordwgVariableIDs": "AutoCatUploads\\Hooks::onMagicWordwgVariableIDs",
+		"ParserGetVariableValueSwitch": "AutoCatUploads\\Hooks::onParserGetVariableValueSwitch",
+		"UploadForm:getInitialPageText": "AutoCatUploads\\Hooks::onGetInitialPageText"
 	},
-	"manifest_version": 1
+	"requires": {
+		"MediaWiki": ">= 1.31.0",
+		"platform": {
+			"ext-SimpleXML": "*",
+			"ext-zlib": "*"
+		}
+	},
+	"load_composer_autoloader": true,
+	"manifest_version": 2
 }
