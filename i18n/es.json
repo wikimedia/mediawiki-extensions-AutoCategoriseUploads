@@ -5,6 +5,5 @@
 			"Tiberius1701"
 		]
 	},
-	"autocatuploads-desc": "Añadir automáticamente categorías a las subidas nuevas según los metadatos del archivo.",
-	"autocatuploads-comment": "<!-- Se añadieron automáticamente las categorías siguientes en función de los metadatos del archivo -->"
+	"autocatuploads-desc": "Añadir automáticamente categorías a las subidas nuevas según los metadatos del archivo."
 }

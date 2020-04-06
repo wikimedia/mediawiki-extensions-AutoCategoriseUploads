@@ -6,6 +6,5 @@
 		]
 	},
 	"autocatuploads": "AutoCategoriseUploads",
-	"autocatuploads-desc": "Ermöglicht das automatische Hinzufügen neu hochgeladener Dateien in Kategorien basierend auf den Metadaten der Dateien.",
-	"autocatuploads-comment": "<!-- Die folgenden Kategorien wurden basierend auf den Metadaten der Datei automatisch hinzugefügt -->"
+	"autocatuploads-desc": "Automatisches Hinzufügen von Kategorien auf der Grundlage von Metadaten der Datei."
 }

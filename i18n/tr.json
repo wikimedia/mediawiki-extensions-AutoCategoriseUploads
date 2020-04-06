@@ -1,10 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Hedda"
+			"Hedda",
+			"BaRaN6161 TURK"
 		]
 	},
 	"autocatuploads": "YüklemeleriOtomatikKategorizeEt",
-	"autocatuploads-desc": "Dosya meta verilerine dayalı kategorilere otomatik olarak yeni yüklemeler ekleyin.",
-	"autocatuploads-comment": "<!-- Aşağıdaki kategoriler dosya meta verilerine dayanarak otomatik olarak eklenmiştir -->"
+	"autocatuploads-desc": "Dosya meta verilerine dayalı olarak kategorileri otomatik olarak ekleyin."
 }

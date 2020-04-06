@@ -5,6 +5,5 @@
 		]
 	},
 	"autocatuploads": "AutoCategoriseUploads",
-	"autocatuploads-desc": "Añadir automáticamente les cargues nueves a categoríes según los metadatos del ficheru.",
-	"autocatuploads-comment": "<!-- Añadiéronse automáticamente les siguientes categoríes en función de los metadatos del ficheru -->"
+	"autocatuploads-desc": "Añadir automáticamente les cargues nueves a categoríes según los metadatos del ficheru."
 }
