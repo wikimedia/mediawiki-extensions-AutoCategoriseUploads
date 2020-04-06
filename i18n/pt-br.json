@@ -5,6 +5,5 @@
 		]
 	},
 	"autocatuploads": "AutoCategoriseUploads",
-	"autocatuploads-desc": "Adicionar automaticamente novos uploads a categorias com base nos metadados do arquivo.",
-	"autocatuploads-comment": "<!-- As seguintes categorias foram adicionadas automaticamente com base nos metadados do arquivo -->"
+	"autocatuploads-desc": "Adicionar automaticamente novos uploads a categorias com base nos metadados do arquivo."
 }

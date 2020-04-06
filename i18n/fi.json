@@ -5,6 +5,5 @@
 		]
 	},
 	"autocatuploads": "AutoCategoriseUploads",
-	"autocatuploads-desc": "Lisää automaattisesti luokkia uusiin tallennuksiin tiedostojen metadatan perusteella.",
-	"autocatuploads-comment": "<!-- Seuraavat luokat lisättiin automaattisesti tiedoston metadatan perusteella -->"
+	"autocatuploads-desc": "Lisää automaattisesti luokkia uusiin tallennuksiin tiedostojen metadatan perusteella."
 }
