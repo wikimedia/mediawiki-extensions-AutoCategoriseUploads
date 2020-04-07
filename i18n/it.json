@@ -1,10 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Sarah Bernabei",
-			"Beta16"
+			"Beta16",
+			"Sarah Bernabei"
 		]
 	},
 	"autocatuploads": "AutoCategorizzazioneCaricamenti",
-	"autocatuploads-desc": "Aggiungere automaticamente i nuovi caricamenti alle categorie in base ai metadata del file."
+	"autocatuploads-desc": "Aggiungere automaticamente le categorie in base ai metadata del file."
 }

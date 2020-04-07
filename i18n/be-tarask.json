@@ -1,9 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Red Winged Duck"
+			"Red Winged Duck",
+			"Renessaince"
 		]
 	},
 	"autocatuploads": "Аўтакатэгарызацыя загрузак",
-	"autocatuploads-desc": "Аўтаматычна дадае новыя загрузкі ў катэгорыі паводле мэтазьвестак файлу."
+	"autocatuploads-desc": "Аўтаматычна дадае катэгорыі паводле мэтазьвестак файлу."
 }
