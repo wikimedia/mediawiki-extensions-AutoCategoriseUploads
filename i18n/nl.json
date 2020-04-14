@@ -1,8 +1,9 @@
 {
 	"@metadata": {
 		"authors": [
-			"Mainframe98"
+			"Mainframe98",
+			"PonkoSasuke"
 		]
 	},
-	"autocatuploads-desc": "Voegt nieuwe uploads auotmatisch toe aan categorieën op basis van bestandsmetadata."
+	"autocatuploads-desc": "Voeg automatisch categorieën toe op basis van bestandsmetadata."
 }
