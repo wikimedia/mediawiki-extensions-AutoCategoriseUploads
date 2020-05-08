@@ -5,5 +5,5 @@
 		]
 	},
 	"autocatuploads": "AutoCategoriseUploads",
-	"autocatuploads-desc": "ファイルのメタデータに基づいて、新規アップロードされたファイルにカテゴリを自動的に付与します。"
+	"autocatuploads-desc": "ファイルのメタデータに基づいて、ファイルにカテゴリを自動的に付与します。"
 }
