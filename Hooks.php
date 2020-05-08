@@ -2,6 +2,7 @@
 
 namespace AutoCatUploads;
 
+use Config;
 use File;
 use getID3;
 use getid3_exception;
