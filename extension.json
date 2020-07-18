@@ -15,7 +15,7 @@
 		]
 	},
 	"ExtensionMessagesFiles": {
-		"ACUMagic": "AutoCategoriseUploads.i18n.php"
+		"ACUMagic": "AutoCategoriseUploads.i18n.magic.php"
 	},
 	"AutoloadClasses": {
 		"AutoCatUploads\\Hooks": "Hooks.php"

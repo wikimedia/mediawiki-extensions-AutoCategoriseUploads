@@ -2,30 +2,22 @@
 
 $magicWords = [];
 
-/**
- * @author Ryan Schmidt
- */
+/** English (English) */
 $magicWords['en'] = [
 	'filecategories' => [ 0, 'filecategories' ]
 ];
 
-/**
- * @author Max Gerlach
- */
+/** German (Deutsch) */
 $magicWords['de'] = [
 	'filecategories' => [ 0, 'dateikategorien' ]
 ];
 
-/**
- * @author Zoranzoki21
- */
+/** Serbian Cyrillic (српски (ћирилица)) */
 $magicWords['sr-ec'] = [
 	'filecategories' => [ 0, 'категориједатотека' ]
 ];
 
-/**
- * @author Zoranzoki21
- */
+/** Serbian Latin (srpski (latinica)) */
 $magicWords['sr-el'] = [
 	'filecategories' => [ 0, 'kategorijedatoteka' ]
 ];
