@@ -1,7 +1,7 @@
 {
 	"require": {
 		"james-heinrich/getid3": "^1.9.19",
-		"ext-SimpleXML": "*",
+		"ext-simplexml": "*",
 		"ext-zlib": "*"
 	},
 	"require-dev": {
