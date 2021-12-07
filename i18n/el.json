@@ -2,9 +2,10 @@
 	"@metadata": {
 		"authors": [
 			"NikosLikomitros",
-			"Nikosgranturismogt"
+			"Nikosgranturismogt",
+			"Giannaras99"
 		]
 	},
 	"autocatuploads": "AutoCategoriseUploads",
-	"autocatuploads-desc": "Προσθέτει αυτόματα νέες μεταφορτώσεις σε κατηγορίες βασισμένες σε μεταδεδομένα αρχείων."
+	"autocatuploads-desc": "Προσθέστε αυτόματα κατηγορίες με βάση τα μεταδεδομένα αρχείων."
 }
