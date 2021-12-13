@@ -2,9 +2,10 @@
 	"@metadata": {
 		"authors": [
 			"Mjälten",
-			"WikiPhoenix"
+			"WikiPhoenix",
+			"Sabelöga"
 		]
 	},
 	"autocatuploads": "AutoCategoriseUploads",
-	"autocatuploads-desc": "Lägg automatiskt till nya uppladdningar i kategorier baserat på filens metadata"
+	"autocatuploads-desc": "Lägg automatiskt till kategorier baserat på filens metadata."
 }

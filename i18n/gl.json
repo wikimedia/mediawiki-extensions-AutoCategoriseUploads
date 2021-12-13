@@ -1,9 +1,10 @@
 {
 	"@metadata": {
 		"authors": [
-			"Banjo"
+			"Banjo",
+			"ArenaL5"
 		]
 	},
 	"autocatuploads": "AutoCategoriseUploads",
-	"autocatuploads-desc": "Engadir categorías de forma automática ós novos ficheiros cargados baseándose nos metadatos de ficheiro."
+	"autocatuploads-desc": "Engadir categorías automaticamente baseándose nos metadatos de ficheiro."
 }
