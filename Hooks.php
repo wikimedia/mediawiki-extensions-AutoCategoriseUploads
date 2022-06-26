@@ -55,7 +55,12 @@ class Hooks {
 		$ret = '';
 
 		$title = $frame instanceof PPFrame ? $frame->getTitle() : $parser->getTitle();
-		$page = WikiPage::factory( $title );
+		if ( method_exists( MediaWikiServices::class, 'getWikiPageFactory' ) ) {
+			// MW 1.36+
+			$page = MediaWikiServices::getInstance()->getWikiPageFactory()->newFromTitle( $title );
+		} else {
+			$page = WikiPage::factory( $title );
+		}
 		if ( !$page instanceof WikiFilePage ) {
 			// not a file page, bail out
 			return;
