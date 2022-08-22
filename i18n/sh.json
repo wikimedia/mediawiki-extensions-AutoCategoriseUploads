@@ -5,5 +5,5 @@
 		]
 	},
 	"autocatuploads": "Autokategorizacija otpremanja",
-	"autocatuploads-desc": "Automatsko stavljanje novih otpremanja u kategorije u skladu s metapodacima datoteka."
+	"autocatuploads-desc": "Automatsko stavljanje kategorija u skladu s metapodacima datoteka."
 }
