@@ -71,13 +71,20 @@ class Hooks {
 			return;
 		}
 
+		$parserOutput = $parser->getOutput();
+		if ( method_exists( $parserOutput, 'getPageProperty' ) ) {
+			// MW 1.38+
+			$defaultSort = $parserOutput->getPageProperty( 'defaultsort' ) ?? '';
+		} else {
+			$defaultSort = $parserOutput->getProperty( 'defaultsort' ) ?: '';
+		}
 		// check our cache; we cache with a tuple of our magic word id (since it's a shared cache)
 		// as well as the hash for the associated file.
 		$cachekey = 'filecategories-' . $file->getSha1();
 		if ( isset( $varCache[$cachekey] ) ) {
 			foreach ( $varCache[$cachekey] as $category ) {
 				/** @var Title $category */
-				$parser->getOutput()->addCategory( $category->getDBkey(), $parser->getDefaultSort() );
+				$parserOutput->addCategory( $category->getDBkey(), $defaultSort );
 			}
 
 			return;
@@ -97,7 +104,7 @@ class Hooks {
 				continue;
 			}
 
-			$parser->getOutput()->addCategory( $category->getDBkey(), $parser->getDefaultSort() );
+			$parserOutput->addCategory( $category->getDBkey(), $defaultSort );
 			$categories[] = $category;
 		}
 
