@@ -1,0 +1,9 @@
+{
+	"@metadata": {
+		"authors": [
+			"Winston Sung"
+		]
+	},
+	"autocatuploads": "Autokategorizacija otpremanja",
+	"autocatuploads-desc": "Automatsko stavljanje kategorija u skladu s metapodacima datoteka."
+}
