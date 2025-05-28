@@ -21,7 +21,7 @@ class Hooks {
 	 *
 	 * @param string[] &$customVariables Array of custom variables that MediaWiki recognizes
 	 */
-	public static function onMagicWordwgVariableIDs( &$customVariables ) {
+	public static function onGetMagicVariableIDs( &$customVariables ): void {
 		$customVariables[] = 'filecategories';
 	}
 

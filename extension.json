@@ -21,7 +21,7 @@
 		"AutoCatUploads\\Hooks": "Hooks.php"
 	},
 	"Hooks": {
-		"MagicWordwgVariableIDs": "AutoCatUploads\\Hooks::onMagicWordwgVariableIDs",
+		"GetMagicVariableIDs": "AutoCatUploads\\Hooks::onGetMagicVariableIDs",
 		"ParserGetVariableValueSwitch": "AutoCatUploads\\Hooks::onParserGetVariableValueSwitch",
 		"UploadForm:getInitialPageText": "AutoCatUploads\\Hooks::onGetInitialPageText"
 	},
