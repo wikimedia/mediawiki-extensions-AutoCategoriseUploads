@@ -7,11 +7,11 @@ use File;
 use getID3;
 use getid3_exception;
 use MediaWiki\MediaWikiServices;
+use MediaWiki\Title\Title;
 use MWException;
 use Parser;
 use PPFrame;
 use SimpleXMLElement;
-use Title;
 use WikiFilePage;
 use WikiPage;
 
