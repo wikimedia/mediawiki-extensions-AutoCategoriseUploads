@@ -4,5 +4,6 @@
 			"Wizzard"
 		]
 	},
-	"autocatuploads": "AutoCategoriseUploads"
+	"autocatuploads": "AutoCategoriseUploads",
+	"autocatuploads-desc": "Automaticky pridáva kategórie na základe metadát súboru."
 }
